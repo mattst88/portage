@@ -15,7 +15,7 @@ from portage._sets import SetConfigError, get_boolean
 import portage
 
 __all__ = ["CategorySet", "ChangedDepsSet", "DowngradeSet",
-	"EverythingSet", "OwnerSet", "VariableSet"]
+	"EverythingSet", "OwnerSet", "SubslotChangedSet", "VariableSet"]
 
 class EverythingSet(PackageSet):
 	_operations = ["merge"]
@@ -164,6 +164,43 @@ class VariableSet(EverythingSet):
 			excludes=frozenset(excludes.split()),
 			includes=frozenset(includes.split()),
 			variable=variable)
+
+	singleBuilder = classmethod(singleBuilder)
+
+class SubslotChangedSet(PackageSet):
+
+	_operations = ["merge", "unmerge"]
+
+	description = "Package set which contains all packages " + \
+		"for which the subslot of the highest visible ebuild is " + \
+		"different than the currently installed version."
+
+	def __init__(self, portdb=None, vardb=None):
+		super(SubslotChangedSet, self).__init__()
+		self._portdb = portdb
+		self._vardb = vardb
+
+	def load(self):
+		atoms = []
+		xmatch = self._portdb.xmatch
+		xmatch_level = "bestmatch-visible"
+		cp_list = self._vardb.cp_list
+		pkg_str = self._vardb._pkg_str
+		for cp in self._vardb.cp_all():
+			for cpv in cp_list(cp):
+				pkg = pkg_str(cpv, None)
+				slot_atom = "%s:%s" % (pkg.cp, pkg.slot)
+				ebuild = xmatch(xmatch_level, slot_atom)
+				if not ebuild:
+					continue
+				if pkg.sub_slot != ebuild.sub_slot:
+					atoms.append(slot_atom)
+
+		self._setAtoms(atoms)
+
+	def singleBuilder(cls, options, settings, trees):
+		return cls(portdb=trees["porttree"].dbapi,
+			vardb=trees["vartree"].dbapi)
 
 	singleBuilder = classmethod(singleBuilder)
 
