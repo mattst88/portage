@@ -90,9 +90,6 @@ __dump_trace() {
 }
 
 nonfatal() {
-	if ! ___eapi_has_nonfatal; then
-		die "$FUNCNAME() not supported in this EAPI"
-	fi
 	if [[ $# -lt 1 ]]; then
 		die "$FUNCNAME(): Missing argument"
 	fi
@@ -108,7 +105,7 @@ __bashpid() {
 }
 
 __helpers_die() {
-	if ___eapi_helpers_can_die && [[ ${PORTAGE_NONFATAL} != 1 ]]; then
+	if [[ ${PORTAGE_NONFATAL} != 1 ]]; then
 		die "$@"
 	else
 		echo -e "$@" >&2

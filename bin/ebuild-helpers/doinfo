@@ -9,10 +9,6 @@ if [[ -z $1 ]] ; then
 	exit 1
 fi
 
-if ! ___eapi_has_prefix_variables; then
-	ED=${D}
-fi
-
 if [[ ! -d ${ED%/}/usr/share/info ]] ; then
 	install -d "${ED%/}/usr/share/info" || { __helpers_die "${0##*/}: failed to install ${ED%/}/usr/share/info"; exit 1; }
 fi

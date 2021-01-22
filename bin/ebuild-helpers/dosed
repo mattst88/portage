@@ -14,10 +14,6 @@ if [[ $# -lt 1 ]] ; then
 	exit 1
 fi
 
-if ! ___eapi_has_prefix_variables; then
-	ED=${D}
-fi
-
 ret=0
 file_found=0
 mysed="s:${ED}::g"

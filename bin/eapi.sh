@@ -4,18 +4,6 @@
 
 # PHASES
 
-___eapi_has_pkg_pretend() {
-	return 0
-}
-
-___eapi_has_src_prepare() {
-	return 0
-}
-
-___eapi_has_src_configure() {
-	return 0
-}
-
 ___eapi_default_src_test_disables_parallel_jobs() {
 	return 1
 }
@@ -25,10 +13,6 @@ ___eapi_has_S_WORKDIR_fallback() {
 }
 
 # VARIABLES
-
-___eapi_has_prefix_variables() {
-	return 0
-}
 
 ___eapi_has_BROOT() {
 	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3|4|4-python|4-slot-abi|5|5-progress|6)$ ]]
@@ -76,24 +60,8 @@ ___eapi_has_dolib_libopts() {
 	[[ ${1-${EAPI-0}} =~ ^(0|1|2|3|4|4-python|4-slot-abi|5|5-progress|6)$ ]]
 }
 
-___eapi_has_docompress() {
-	return 0
-}
-
 ___eapi_has_dostrip() {
 	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3|4|4-python|4-slot-abi|5|5-progress|6)$ ]]
-}
-
-___eapi_has_nonfatal() {
-	return 0
-}
-
-___eapi_has_doheader() {
-	return 0
-}
-
-___eapi_has_usex() {
-	return 0
 }
 
 ___eapi_has_get_libdir() {
@@ -158,20 +126,8 @@ ___eapi_best_version_and_has_version_support_-b_-d_-r() {
 	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3|4|4-python|4-slot-abi|5|5-progress|6)$ ]]
 }
 
-___eapi_unpack_supports_xz() {
-	return 0
-}
-
 ___eapi_unpack_supports_txz() {
 	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3|4|4-python|4-slot-abi|5|5-progress)$ ]]
-}
-
-___eapi_econf_passes_--disable-dependency-tracking() {
-	return 0
-}
-
-___eapi_econf_passes_--disable-silent-rules() {
-	return 0
 }
 
 ___eapi_econf_passes_--docdir_and_--htmldir() {
@@ -180,26 +136,6 @@ ___eapi_econf_passes_--docdir_and_--htmldir() {
 
 ___eapi_econf_passes_--with-sysroot() {
 	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3|4|4-python|4-slot-abi|5|5-progress|6)$ ]]
-}
-
-___eapi_use_enable_and_use_with_support_empty_third_argument() {
-	return 0
-}
-
-___eapi_dodoc_supports_-r() {
-	return 0
-}
-
-___eapi_doins_and_newins_preserve_symlinks() {
-	return 0
-}
-
-___eapi_newins_supports_reading_from_standard_input() {
-	return 0
-}
-
-___eapi_helpers_can_die() {
-	return 0
 }
 
 ___eapi_unpack_is_case_sensitive() {

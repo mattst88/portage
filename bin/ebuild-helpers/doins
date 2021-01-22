@@ -38,10 +38,6 @@ if [[ "$1" == "-r" ]] ; then
 	shift
 fi
 
-if ! ___eapi_has_prefix_variables; then
-	export ED="${D}"
-fi
-
 if [[ ${_E_INSDESTTREE_#${ED}} != "${_E_INSDESTTREE_}" ]]; then
 	__vecho "-------------------------------------------------------" 1>&2
 	__vecho "You should not use \${D} or \${ED} with helpers." 1>&2
@@ -51,13 +47,8 @@ if [[ ${_E_INSDESTTREE_#${ED}} != "${_E_INSDESTTREE_}" ]]; then
 	exit 1
 fi
 
-if ___eapi_doins_and_newins_preserve_symlinks; then
-	DOINS_ARGS+=( --preserve_symlinks )
-fi
-
-if ___eapi_helpers_can_die; then
-	DOINS_ARGS+=( --helpers_can_die )
-fi
+DOINS_ARGS+=( --preserve_symlinks )
+DOINS_ARGS+=( --helpers_can_die )
 
 if [[ -n "${INSOPTIONS}" ]]; then
 	DOINS_ARGS+=( "--insoptions=${INSOPTIONS}" )

@@ -17,9 +17,6 @@ shift $#
 source "${PORTAGE_BIN_PATH}/ebuild.sh" || exit 1
 
 install_symlink_html_docs() {
-	if ! ___eapi_has_prefix_variables; then
-		local ED=${D}
-	fi
 	cd "${ED}" || die "cd failed"
 	#symlink the html documentation (if DOC_SYMLINKS_DIR is set in make.conf)
 	if [ -n "${DOC_SYMLINKS_DIR}" ] ; then
@@ -79,9 +76,6 @@ canonicalize() {
 
 install_qa_check() {
 	local d f i qa_var x paths qa_checks=() checks_run=()
-	if ! ___eapi_has_prefix_variables; then
-		local EPREFIX= ED=${D}
-	fi
 
 	cd "${ED}" || die "cd failed"
 
@@ -263,9 +257,6 @@ preinst_qa_check() {
 
 postinst_qa_check() {
 	local d f paths qa_checks=() PORTAGE_QA_PHASE=${1:-postinst}
-	if ! ___eapi_has_prefix_variables; then
-		local EPREFIX= EROOT=${ROOT}
-	fi
 
 	cd "${EROOT:-/}" || die "cd failed"
 
@@ -347,10 +338,6 @@ preinst_sfperms() {
 		 return 1
 	fi
 
-	if ! ___eapi_has_prefix_variables; then
-		local ED=${D}
-	fi
-
 	# Smart FileSystem Permissions
 	if has sfperms $FEATURES; then
 		local i
@@ -385,10 +372,6 @@ preinst_suid_scan() {
 	if [ -z "${D}" ]; then
 		 eerror "${FUNCNAME}: D is unset"
 		 return 1
-	fi
-
-	if ! ___eapi_has_prefix_variables; then
-		local ED=${D}
 	fi
 
 	# total suid control.
@@ -453,11 +436,6 @@ preinst_selinux_labels() {
 }
 
 __dyn_package() {
-
-	if ! ___eapi_has_prefix_variables; then
-		local EPREFIX=
-	fi
-
 	# Make sure $PWD is not ${D} so that we don't leave gmon.out files
 	# in there in case any tools were built with -pg in CFLAGS.
 	cd "${T}" || die
@@ -538,10 +516,6 @@ __END1__
 }
 
 __dyn_rpm() {
-	if ! ___eapi_has_prefix_variables; then
-		local EPREFIX=
-	fi
-
 	cd "${T}" || die "cd failed"
 	local machine_name=${CHOST%%-*}
 	local dest_dir=${T}/rpmbuild/RPMS/${machine_name}

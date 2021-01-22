@@ -8,8 +8,4 @@ if ___eapi_has_dostrip; then
 	die "${0##*/}: ${0##*/} has been banned for EAPI '$EAPI'; use 'dostrip' instead"
 fi
 
-if ! ___eapi_has_prefix_variables; then
-	ED=${D}
-fi
-
 exec prepstrip "${ED}"

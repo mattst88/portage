@@ -24,9 +24,6 @@ for path in ${PATH}; do
 			output="${output}\n ... (further messages truncated)"
 		fi
 
-		if ! ___eapi_has_prefix_variables; then
-			EPREFIX=
-		fi
 		msg="${scriptname} failure ignored with unprivileged user:\n    ${scriptname} $*\n    ${output}"
 		# Reverse expansion of ${D} and ${EPREFIX}, for readability.
 		msg=${msg//${D}/'${D}'}

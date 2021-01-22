@@ -9,10 +9,6 @@ if [[ -z ${PORTAGE_INTERNAL_DOLIB} ]] && ! ___eapi_has_dolib_libopts; then
 	exit 1
 fi
 
-if ! ___eapi_has_prefix_variables; then
-	ED=${D}
-fi
-
 if ! ___eapi_has_DESTTREE_INSDESTTREE; then
 	[[ -n ${DESTTREE} ]] &&
 		die "${0##*/}: \${DESTTREE} has been banned for EAPI '$EAPI'; use 'into' instead"

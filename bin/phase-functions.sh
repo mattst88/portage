@@ -107,13 +107,9 @@ __filter_readonly_variables() {
 	if ___eapi_has_BROOT; then
 		filtered_vars+=" BROOT"
 	fi
-	# Don't filter/interfere with prefix variables unless they are
-	# supported by the current EAPI.
-	if ___eapi_has_prefix_variables; then
-		filtered_vars+=" ED EPREFIX EROOT"
-		if ___eapi_has_SYSROOT; then
-			filtered_vars+=" ESYSROOT"
-		fi
+	filtered_vars+=" ED EPREFIX EROOT"
+	if ___eapi_has_SYSROOT; then
+		filtered_vars+=" ESYSROOT"
 	fi
 	if ___eapi_has_PORTDIR_ECLASSDIR; then
 		filtered_vars+=" PORTDIR ECLASSDIR"
@@ -555,11 +551,7 @@ __dyn_install() {
 
 	__ebuild_phase pre_src_install
 
-	if ___eapi_has_prefix_variables; then
-		_x=${ED}
-	else
-		_x=${D}
-	fi
+	_x=${ED}
 	rm -rf "${D}"
 	mkdir -p "${_x}"
 	unset _x
@@ -680,7 +672,7 @@ __dyn_install() {
 	# Save EPREFIX, since it makes it easy to use chpathtool to
 	# adjust the content of a binary package so that it will
 	# work in a different EPREFIX from the one is was built for.
-	if ___eapi_has_prefix_variables && [[ -n ${EPREFIX} ]]; then
+	if [[ -n ${EPREFIX} ]]; then
 		echo "${EPREFIX}" > EPREFIX
 	fi
 
@@ -783,8 +775,7 @@ __ebuild_arg_to_phase() {
 
 	case "$arg" in
 		pretend)
-			___eapi_has_pkg_pretend && \
-				phase_func=pkg_pretend
+			phase_func=pkg_pretend
 			;;
 		setup)
 			phase_func=pkg_setup
@@ -796,12 +787,10 @@ __ebuild_arg_to_phase() {
 			phase_func=src_unpack
 			;;
 		prepare)
-			___eapi_has_src_prepare && \
-				phase_func=src_prepare
+			phase_func=src_prepare
 			;;
 		configure)
-			___eapi_has_src_configure && \
-				phase_func=src_configure
+			phase_func=src_configure
 			;;
 		compile)
 			phase_func=src_compile

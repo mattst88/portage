@@ -29,9 +29,6 @@ into() {
 		export _E_DESTTREE_=""
 	else
 		export _E_DESTTREE_=$1
-		if ! ___eapi_has_prefix_variables; then
-			local ED=${D}
-		fi
 		if [ ! -d "${ED%/}/${_E_DESTTREE_#/}" ]; then
 			install -d "${ED%/}/${_E_DESTTREE_#/}"
 			local ret=$?
@@ -52,9 +49,6 @@ insinto() {
 		export _E_INSDESTTREE_=""
 	else
 		export _E_INSDESTTREE_=$1
-		if ! ___eapi_has_prefix_variables; then
-			local ED=${D}
-		fi
 		if [ ! -d "${ED%/}/${_E_INSDESTTREE_#/}" ]; then
 			install -d "${ED%/}/${_E_INSDESTTREE_#/}"
 			local ret=$?
@@ -75,9 +69,6 @@ exeinto() {
 		export _E_EXEDESTTREE_=""
 	else
 		export _E_EXEDESTTREE_="$1"
-		if ! ___eapi_has_prefix_variables; then
-			local ED=${D}
-		fi
 		if [ ! -d "${ED%/}/${_E_EXEDESTTREE_#/}" ]; then
 			install -d "${ED%/}/${_E_EXEDESTTREE_#/}"
 			local ret=$?
@@ -94,9 +85,6 @@ docinto() {
 		export _E_DOCDESTTREE_=""
 	else
 		export _E_DOCDESTTREE_="$1"
-		if ! ___eapi_has_prefix_variables; then
-			local ED=${D}
-		fi
 		if [ ! -d "${ED%/}/usr/share/doc/${PF}/${_E_DOCDESTTREE_#/}" ]; then
 			install -d "${ED%/}/usr/share/doc/${PF}/${_E_DOCDESTTREE_#/}"
 			local ret=$?
@@ -138,8 +126,6 @@ libopts() {
 }
 
 docompress() {
-	___eapi_has_docompress || die "'docompress' not supported in this EAPI"
-
 	local f g
 	if [[ $1 = "-x" ]]; then
 		shift
@@ -202,16 +188,14 @@ usev() {
 	return 1
 }
 
-if ___eapi_has_usex; then
-	usex() {
-		if use "$1"; then
-			echo "${2-yes}$4"
-		else
-			echo "${3-no}$5"
-		fi
-		return 0
-	}
-fi
+usex() {
+	if use "$1"; then
+		echo "${2-yes}$4"
+	else
+		echo "${3-no}$5"
+	fi
+	return 0
+}
 
 use() {
 	local u=$1
@@ -268,11 +252,7 @@ use_with() {
 		return 1
 	fi
 
-	if ___eapi_use_enable_and_use_with_support_empty_third_argument; then
-		local UW_SUFFIX=${3+=$3}
-	else
-		local UW_SUFFIX=${3:+=$3}
-	fi
+	local UW_SUFFIX=${3+=$3}
 	local UWORD=${2:-$1}
 
 	if use $1; then
@@ -290,11 +270,7 @@ use_enable() {
 		return 1
 	fi
 
-	if ___eapi_use_enable_and_use_with_support_empty_third_argument; then
-		local UE_SUFFIX=${3+=$3}
-	else
-		local UE_SUFFIX=${3:+=$3}
-	fi
+	local UE_SUFFIX=${3+=$3}
 	local UWORD=${2:-$1}
 
 	if use $1; then
@@ -515,11 +491,7 @@ unpack() {
 						"suffix '${suffix}' which is unofficially supported" \
 						"with EAPI '${EAPI}'. Instead use 'xz'."
 				fi
-				if ___eapi_unpack_supports_xz; then
-					__unpack_tar "xz -d"
-				else
-					__vecho "unpack ${x}: file format not recognized. Ignoring."
-				fi
+				__unpack_tar "xz -d"
 				;;
 			txz)
 				if ___eapi_unpack_is_case_sensitive && \
@@ -549,10 +521,6 @@ econf() {
 	local x
 	local pid=${BASHPID:-$(__bashpid)}
 
-	if ! ___eapi_has_prefix_variables; then
-		local EPREFIX=
-	fi
-
 	__hasg() {
 		local x s=$1
 		shift
@@ -564,15 +532,9 @@ econf() {
 
 	local phase_func=$(__ebuild_arg_to_phase "$EBUILD_PHASE")
 	if [[ -n $phase_func ]] ; then
-		if ! ___eapi_has_src_configure; then
-			[[ $phase_func != src_compile ]] && \
-				eqawarn "QA Notice: econf called in" \
-					"$phase_func instead of src_compile"
-		else
-			[[ $phase_func != src_configure ]] && \
-				eqawarn "QA Notice: econf called in" \
-					"$phase_func instead of src_configure"
-		fi
+		[[ $phase_func != src_configure ]] && \
+			eqawarn "QA Notice: econf called in" \
+				"$phase_func instead of src_configure"
 	fi
 
 	: ${ECONF_SOURCE:=.}
@@ -600,35 +562,29 @@ econf() {
 		fi
 
 		local conf_args=()
-		if ___eapi_econf_passes_--disable-dependency-tracking || ___eapi_econf_passes_--disable-silent-rules || ___eapi_econf_passes_--docdir_and_--htmldir || ___eapi_econf_passes_--with-sysroot; then
-			local conf_help=$("${ECONF_SOURCE}/configure" --help 2>/dev/null)
+		local conf_help=$("${ECONF_SOURCE}/configure" --help 2>/dev/null)
 
-			if ___eapi_econf_passes_--disable-dependency-tracking; then
-				if [[ ${conf_help} == *--disable-dependency-tracking* ]]; then
-					conf_args+=( --disable-dependency-tracking )
-				fi
+		if [[ ${conf_help} == *--disable-dependency-tracking* ]]; then
+			conf_args+=( --disable-dependency-tracking )
+		fi
+
+		if [[ ${conf_help} == *--disable-silent-rules* ]]; then
+			conf_args+=( --disable-silent-rules )
+		fi
+
+		if ___eapi_econf_passes_--docdir_and_--htmldir; then
+			if [[ ${conf_help} == *--docdir* ]]; then
+				conf_args+=( --docdir="${EPREFIX}"/usr/share/doc/${PF} )
 			fi
 
-			if ___eapi_econf_passes_--disable-silent-rules; then
-				if [[ ${conf_help} == *--disable-silent-rules* ]]; then
-					conf_args+=( --disable-silent-rules )
-				fi
+			if [[ ${conf_help} == *--htmldir* ]]; then
+				conf_args+=( --htmldir="${EPREFIX}"/usr/share/doc/${PF}/html )
 			fi
+		fi
 
-			if ___eapi_econf_passes_--docdir_and_--htmldir; then
-				if [[ ${conf_help} == *--docdir* ]]; then
-					conf_args+=( --docdir="${EPREFIX}"/usr/share/doc/${PF} )
-				fi
-
-				if [[ ${conf_help} == *--htmldir* ]]; then
-					conf_args+=( --htmldir="${EPREFIX}"/usr/share/doc/${PF}/html )
-				fi
-			fi
-
-			if ___eapi_econf_passes_--with-sysroot; then
-				if [[ ${conf_help} == *--with-sysroot* ]]; then
-					conf_args+=( --with-sysroot="${ESYSROOT:-/}" )
-				fi
+		if ___eapi_econf_passes_--with-sysroot; then
+			if [[ ${conf_help} == *--with-sysroot* ]]; then
+				conf_args+=( --with-sysroot="${ESYSROOT:-/}" )
 			fi
 		fi
 
@@ -675,8 +631,6 @@ econf() {
 				echo "!!! Please attach the following file when seeking support:"
 				echo "!!! ${PWD}/config.log"
 			fi
-			# econf dies unconditionally in EAPIs 0 to 3
-			___eapi_helpers_can_die || die "econf failed"
 			__helpers_die "econf failed"
 			return 1
 		fi
@@ -695,9 +649,6 @@ einstall() {
 
 	# CONF_PREFIX is only set if they didn't pass in libdir above.
 	local LOCAL_EXTRA_EINSTALL="${EXTRA_EINSTALL}"
-	if ! ___eapi_has_prefix_variables; then
-		local ED=${D}
-	fi
 	LIBDIR_VAR="LIBDIR_${ABI}"
 	if [ -n "${ABI}" -a -n "${!LIBDIR_VAR}" ]; then
 		CONF_LIBDIR="${!LIBDIR_VAR}"
@@ -853,45 +804,33 @@ ___best_version_and_has_version_common() {
 	[ $# -gt 0 ] && die "${FUNCNAME[1]}: unused argument(s): $*"
 
 	case ${root_arg} in
-		"") if ___eapi_has_prefix_variables; then
-				root=${ROOT%/}/${EPREFIX#/}
-			else
-				root=${ROOT}
-			fi ;;
+		"") 
+			root=${ROOT%/}/${EPREFIX#/}
+			;;
 		--host-root)
 			if ! ___eapi_best_version_and_has_version_support_--host-root; then
 				die "${FUNCNAME[1]}: option ${root_arg} is not supported with EAPI ${EAPI}"
 			fi
-			if ___eapi_has_prefix_variables; then
-				# Since portageq requires the root argument be consistent
-				# with EPREFIX, ensure consistency here (bug 655414).
-				root=/${PORTAGE_OVERRIDE_EPREFIX#/}
-				cmd+=(env EPREFIX="${PORTAGE_OVERRIDE_EPREFIX}")
-			else
-				root=/
-			fi ;;
+			# Since portageq requires the root argument be consistent
+			# with EPREFIX, ensure consistency here (bug 655414).
+			root=/${PORTAGE_OVERRIDE_EPREFIX#/}
+			cmd+=(env EPREFIX="${PORTAGE_OVERRIDE_EPREFIX}")
+			;;
 		-r|-d|-b)
 			if ! ___eapi_best_version_and_has_version_support_-b_-d_-r; then
 				die "${FUNCNAME[1]}: option ${root_arg} is not supported with EAPI ${EAPI}"
 			fi
-			if ___eapi_has_prefix_variables; then
-				case ${root_arg} in
-					-r) root=${ROOT%/}/${EPREFIX#/} ;;
-					-d) root=${ESYSROOT:-/} ;;
-					-b)
-						# Use /${PORTAGE_OVERRIDE_EPREFIX#/} which is equivalent
-						# to BROOT, except BROOT is only defined in src_* phases.
-						root=/${PORTAGE_OVERRIDE_EPREFIX#/}
-						cmd+=(env EPREFIX="${PORTAGE_OVERRIDE_EPREFIX}")
-						;;
-				esac
-			else
-				case ${root_arg} in
-					-r) root=${ROOT:-/} ;;
-					-d) root=${SYSROOT:-/} ;;
-					-b) root=/ ;;
-				esac
-			fi ;;
+			case ${root_arg} in
+				-r) root=${ROOT%/}/${EPREFIX#/} ;;
+				-d) root=${ESYSROOT:-/} ;;
+				-b)
+					# Use /${PORTAGE_OVERRIDE_EPREFIX#/} which is equivalent
+					# to BROOT, except BROOT is only defined in src_* phases.
+					root=/${PORTAGE_OVERRIDE_EPREFIX#/}
+					cmd+=(env EPREFIX="${PORTAGE_OVERRIDE_EPREFIX}")
+					;;
+			esac
+			;;
 	esac
 
 	if [[ -n $PORTAGE_IPC_DAEMON ]] ; then

@@ -55,7 +55,7 @@ __save_ebuild_env() {
 		__has_phase_defined_up_to \
 		hasv hasq __qa_source __qa_call \
 		addread addwrite adddeny addpredict __sb_append_var \
-		use usev useq has_version portageq \
+		use useq usev usex has_version portageq \
 		best_version use_with use_enable register_die_hook \
 		unpack __strip_duplicate_slashes econf einstall \
 		__dyn_setup __dyn_unpack __dyn_clean \
@@ -80,7 +80,6 @@ __save_ebuild_env() {
 		__eqaquote __eqatag \
 		${QA_INTERCEPTORS}
 
-	___eapi_has_usex && unset -f usex
 	___eapi_has_master_repositories && unset -f master_repositories
 	___eapi_has_repository_path && unset -f repository_path
 	___eapi_has_available_eclasses && unset -f available_eclasses

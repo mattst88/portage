@@ -9,10 +9,6 @@ if [[ -z $1 ]] ; then
 	exit 1
 fi
 
-if ! ___eapi_has_prefix_variables; then
-	ED=${D} EPREFIX=
-fi
-
 while [[ $# -gt 0 ]] ; do
 	case $1 in
 	--ignore)

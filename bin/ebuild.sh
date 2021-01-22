@@ -64,8 +64,7 @@ else
 		KV_major KV_micro KV_minor KV_to_int
 		libopts register_die_hook register_success_hook
 		__strip_duplicate_slashes
-		use useq usev use_with use_enable"
-	___eapi_has_usex && funcs+=" usex"
+		use useq usev usex use_with use_enable"
 	___eapi_has_in_iuse && funcs+=" in_iuse"
 	___eapi_has_get_libdir && funcs+=" get_libdir"
 	# These functions die because calls to them during the "depend" phase
@@ -736,9 +735,7 @@ else
 	# Note: readonly variables interfere with __preprocess_ebuild_env(), so
 	# declare them only after it has already run.
 	declare -r $PORTAGE_READONLY_METADATA $PORTAGE_READONLY_VARS
-	if ___eapi_has_prefix_variables; then
-		declare -r ED EPREFIX EROOT
-	fi
+	declare -r ED EPREFIX EROOT
 	if ___eapi_has_BROOT; then
 		declare -r BROOT
 	fi

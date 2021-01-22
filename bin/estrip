@@ -18,10 +18,6 @@ exp_tf() {
 exp_tf FEATURES compressdebug installsources nostrip splitdebug xattr
 exp_tf RESTRICT binchecks installsources splitdebug strip
 
-if ! ___eapi_has_prefix_variables; then
-	EPREFIX= ED=${D}
-fi
-
 banner=false
 SKIP_STRIP=false
 if ${RESTRICT_strip} || ${FEATURES_nostrip} ; then
