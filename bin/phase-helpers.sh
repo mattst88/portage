@@ -223,10 +223,7 @@ use() {
 	elif declare -f ___in_portage_iuse >/dev/null &&
 		[[ -n ${EBUILD_PHASE} && -n ${PORTAGE_INTERNAL_CALLER} ]] ; then
 		if ! ___in_portage_iuse "${u}"; then
-			if [[ ${EMERGE_FROM} != binary &&
-				! ${EAPI} =~ ^(0|1|2|3|4|4-python|4-slot-abi)$ ]] ; then
-				# This is only strict starting with EAPI 5, since implicit IUSE
-				# is not well defined for earlier EAPIs (see bug #449708).
+			if [[ ${EMERGE_FROM} != binary ]] ; then
 				die "USE Flag '${u}' not in IUSE for ${CATEGORY}/${PF}"
 			fi
 			eqawarn "QA Notice: USE Flag '${u}' not" \
@@ -705,13 +702,6 @@ __eapi0_src_unpack() {
 	[[ -n ${A} ]] && unpack ${A}
 }
 
-__eapi0_src_compile() {
-	if [ -x ./configure ] ; then
-		econf
-	fi
-	__eapi2_src_compile
-}
-
 __eapi0_src_test() {
 	# Since we don't want emake's automatic die
 	# support (EAPI 4 and later), and we also don't
@@ -729,11 +719,6 @@ __eapi0_src_test() {
 		$emake_cmd ${internal_opts} test || \
 			die "Make test failed. See above for details."
 	fi
-}
-
-__eapi1_src_compile() {
-	__eapi2_src_configure
-	__eapi2_src_compile
 }
 
 __eapi2_src_prepare() {

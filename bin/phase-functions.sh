@@ -832,79 +832,53 @@ __ebuild_phase_funcs() {
 		default_${phase_func}
 	}"
 
-	case "$eapi" in
-		0|1) # EAPIs not supporting 'default'
+	# defaults starting with EAPI 0
+	[[ ${phase_func} == pkg_nofetch ]] && \
+		default_pkg_nofetch() { __eapi0_pkg_nofetch; }
+	[[ ${phase_func} == src_unpack ]] && \
+		default_src_unpack() { __eapi0_src_unpack; }
+	[[ ${phase_func} == src_test ]] && \
+		default_src_test() { __eapi0_src_test; }
 
-			for x in pkg_nofetch src_unpack src_test ; do
-				declare -F $x >/dev/null || \
-					eval "$x() { __eapi0_$x; }"
-			done
+	# defaults starting with EAPI 2
+	[[ ${phase_func} == src_prepare ]] && \
+		default_src_prepare() { __eapi2_src_prepare; }
+	[[ ${phase_func} == src_configure ]] && \
+		default_src_configure() { __eapi2_src_configure; }
+	[[ ${phase_func} == src_compile ]] && \
+		default_src_compile() { __eapi2_src_compile; }
 
-			if ! declare -F src_compile >/dev/null ; then
-				case "$eapi" in
-					0)
-						src_compile() { __eapi0_src_compile; }
-						;;
-					*)
-						src_compile() { __eapi1_src_compile; }
-						;;
-				esac
-			fi
-			;;
+	# bind supported phases to the defaults
+	declare -F pkg_nofetch >/dev/null || \
+		pkg_nofetch() { default; }
+	declare -F src_unpack >/dev/null || \
+		src_unpack() { default; }
+	declare -F src_prepare >/dev/null || \
+		src_prepare() { default; }
+	declare -F src_configure >/dev/null || \
+		src_configure() { default; }
+	declare -F src_compile >/dev/null || \
+		src_compile() { default; }
+	declare -F src_test >/dev/null || \
+		src_test() { default; }
 
-		*) # EAPIs supporting 'default'
+	# defaults starting with EAPI 4
+	[[ ${phase_func} == src_install ]] && \
+		default_src_install() { __eapi4_src_install; }
 
-			# defaults starting with EAPI 0
-			[[ ${phase_func} == pkg_nofetch ]] && \
-				default_pkg_nofetch() { __eapi0_pkg_nofetch; }
-			[[ ${phase_func} == src_unpack ]] && \
-				default_src_unpack() { __eapi0_src_unpack; }
-			[[ ${phase_func} == src_test ]] && \
-				default_src_test() { __eapi0_src_test; }
+	declare -F src_install >/dev/null || \
+		src_install() { default; }
 
-			# defaults starting with EAPI 2
-			[[ ${phase_func} == src_prepare ]] && \
-				default_src_prepare() { __eapi2_src_prepare; }
-			[[ ${phase_func} == src_configure ]] && \
-				default_src_configure() { __eapi2_src_configure; }
-			[[ ${phase_func} == src_compile ]] && \
-				default_src_compile() { __eapi2_src_compile; }
+	# defaults starting with EAPI 6
+	if ! has ${eapi} 2 3 4 4-python 4-slot-abi 5 5-progress; then
+		[[ ${phase_func} == src_prepare ]] && \
+			default_src_prepare() { __eapi6_src_prepare; }
+		[[ ${phase_func} == src_install ]] && \
+			default_src_install() { __eapi6_src_install; }
 
-			# bind supported phases to the defaults
-			declare -F pkg_nofetch >/dev/null || \
-				pkg_nofetch() { default; }
-			declare -F src_unpack >/dev/null || \
-				src_unpack() { default; }
-			declare -F src_prepare >/dev/null || \
-				src_prepare() { default; }
-			declare -F src_configure >/dev/null || \
-				src_configure() { default; }
-			declare -F src_compile >/dev/null || \
-				src_compile() { default; }
-			declare -F src_test >/dev/null || \
-				src_test() { default; }
-
-			# defaults starting with EAPI 4
-			if ! has ${eapi} 2 3; then
-				[[ ${phase_func} == src_install ]] && \
-					default_src_install() { __eapi4_src_install; }
-
-				declare -F src_install >/dev/null || \
-					src_install() { default; }
-			fi
-
-			# defaults starting with EAPI 6
-			if ! has ${eapi} 2 3 4 4-python 4-slot-abi 5 5-progress; then
-				[[ ${phase_func} == src_prepare ]] && \
-					default_src_prepare() { __eapi6_src_prepare; }
-				[[ ${phase_func} == src_install ]] && \
-					default_src_install() { __eapi6_src_install; }
-
-				declare -F src_prepare >/dev/null || \
-					src_prepare() { default; }
-			fi
-			;;
-	esac
+		declare -F src_prepare >/dev/null || \
+			src_prepare() { default; }
+	fi
 }
 
 __ebuild_main() {

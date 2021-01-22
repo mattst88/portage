@@ -634,23 +634,9 @@ if ! has "$EBUILD_PHASE" clean cleanrm ; then
 		unset E_BDEPEND __INHERITED_QA_CACHE
 
 		# alphabetically ordered by $EBUILD_PHASE value
-		case ${EAPI} in
-			0|1)
-				_valid_phases="src_compile pkg_config pkg_info src_install
-					pkg_nofetch pkg_postinst pkg_postrm pkg_preinst pkg_prerm
-					pkg_setup src_test src_unpack"
-				;;
-			2|3)
-				_valid_phases="src_compile pkg_config src_configure pkg_info
-					src_install pkg_nofetch pkg_postinst pkg_postrm pkg_preinst
-					src_prepare pkg_prerm pkg_setup src_test src_unpack"
-				;;
-			*)
-				_valid_phases="src_compile pkg_config src_configure pkg_info
-					src_install pkg_nofetch pkg_postinst pkg_postrm pkg_preinst
-					src_prepare pkg_prerm pkg_pretend pkg_setup src_test src_unpack"
-				;;
-		esac
+		_valid_phases="src_compile pkg_config src_configure pkg_info
+			src_install pkg_nofetch pkg_postinst pkg_postrm pkg_preinst
+			src_prepare pkg_prerm pkg_pretend pkg_setup src_test src_unpack"
 
 		DEFINED_PHASES=
 		for _f in $_valid_phases ; do
