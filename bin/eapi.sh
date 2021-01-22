@@ -2,16 +2,6 @@
 # Copyright 2012-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-# PHASES
-
-___eapi_default_src_test_disables_parallel_jobs() {
-	return 1
-}
-
-___eapi_has_S_WORKDIR_fallback() {
-	return 1
-}
-
 # VARIABLES
 
 ___eapi_has_BROOT() {
@@ -26,23 +16,11 @@ ___eapi_has_BDEPEND() {
 	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3|4|4-python|4-slot-abi|5|5-progress|6)$ ]]
 }
 
-___eapi_has_RDEPEND_DEPEND_fallback() {
-	return 1
-}
-
 ___eapi_has_PORTDIR_ECLASSDIR() {
 	[[ ${1-${EAPI-0}} =~ ^(0|1|2|3|4|4-python|4-slot-abi|5|5-progress|6)$ ]]
 }
 
 # HELPERS PRESENCE
-
-___eapi_has_dohard() {
-	return 1
-}
-
-___eapi_has_dosed() {
-	return 1
-}
 
 ___eapi_has_einstall() {
 	[[ ${1-${EAPI-0}} =~ ^(0|1|2|3|4|4-python|4-slot-abi|5|5-progress)$ ]]
@@ -86,34 +64,6 @@ ___eapi_has_in_iuse() {
 
 ___eapi_has_version_functions() {
 	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3|4|4-python|4-slot-abi|5|5-progress|6)$ ]]
-}
-
-___eapi_has_master_repositories() {
-	return 1
-}
-
-___eapi_has_repository_path() {
-	return 1
-}
-
-___eapi_has_available_eclasses() {
-	return 1
-}
-
-___eapi_has_eclass_path() {
-	return 1
-}
-
-___eapi_has_license_path() {
-	return 1
-}
-
-___eapi_has_package_manager_build_user() {
-	return 1
-}
-
-___eapi_has_package_manager_build_group() {
-	return 1
 }
 
 # HELPERS BEHAVIOR

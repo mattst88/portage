@@ -372,8 +372,6 @@ __dyn_prepare() {
 
 	if [[ -d $S ]] ; then
 		cd "${S}"
-	elif ___eapi_has_S_WORKDIR_fallback; then
-		cd "${WORKDIR}"
 	elif [[ -z ${A} ]] && ! __has_phase_defined_up_to prepare; then
 		cd "${WORKDIR}"
 	else
@@ -409,8 +407,6 @@ __dyn_configure() {
 
 	if [[ -d $S ]] ; then
 		cd "${S}"
-	elif ___eapi_has_S_WORKDIR_fallback; then
-		cd "${WORKDIR}"
 	elif [[ -z ${A} ]] && ! __has_phase_defined_up_to configure; then
 		cd "${WORKDIR}"
 	else
@@ -442,8 +438,6 @@ __dyn_compile() {
 
 	if [[ -d $S ]] ; then
 		cd "${S}"
-	elif ___eapi_has_S_WORKDIR_fallback; then
-		cd "${WORKDIR}"
 	elif [[ -z ${A} ]] && ! __has_phase_defined_up_to compile; then
 		cd "${WORKDIR}"
 	else
@@ -477,8 +471,6 @@ __dyn_test() {
 
 	if [[ -d ${S} ]]; then
 		cd "${S}"
-	elif ___eapi_has_S_WORKDIR_fallback; then
-		cd "${WORKDIR}"
 	elif [[ -z ${A} ]] && ! __has_phase_defined_up_to test; then
 		cd "${WORKDIR}"
 	else
@@ -558,8 +550,6 @@ __dyn_install() {
 
 	if [[ -d $S ]] ; then
 		cd "${S}"
-	elif ___eapi_has_S_WORKDIR_fallback; then
-		cd "${WORKDIR}"
 	elif [[ -z ${A} ]] && ! __has_phase_defined_up_to install; then
 		cd "${WORKDIR}"
 	else

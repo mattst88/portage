@@ -70,11 +70,6 @@ else
 	# These functions die because calls to them during the "depend" phase
 	# are considered to be severe QA violations.
 	funcs+=" best_version has_version portageq"
-	___eapi_has_master_repositories && funcs+=" master_repositories"
-	___eapi_has_repository_path && funcs+=" repository_path"
-	___eapi_has_available_eclasses && funcs+=" available_eclasses"
-	___eapi_has_eclass_path && funcs+=" eclass_path"
-	___eapi_has_license_path && funcs+=" license_path"
 	for x in ${funcs} ; do
 		eval "${x}() { die \"\${FUNCNAME}() calls are not allowed in global scope\"; }"
 	done
@@ -626,11 +621,6 @@ if ! has "$EBUILD_PHASE" clean cleanrm ; then
 
 		# export EAPI for helpers (especially since we unset it above)
 		export EAPI
-
-		if ___eapi_has_RDEPEND_DEPEND_fallback; then
-			export RDEPEND=${RDEPEND-${DEPEND}}
-			debug-print "RDEPEND: not set... Setting to: ${DEPEND}"
-		fi
 
 		# add in dependency info from eclasses
 		IUSE+="${IUSE:+ }${E_IUSE}"
