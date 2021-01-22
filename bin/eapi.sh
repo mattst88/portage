@@ -5,29 +5,29 @@
 # PHASES
 
 ___eapi_has_pkg_pretend() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3)$ ]]
+	return 0
 }
 
 ___eapi_has_src_prepare() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1)$ ]]
+	return 0
 }
 
 ___eapi_has_src_configure() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1)$ ]]
+	return 0
 }
 
 ___eapi_default_src_test_disables_parallel_jobs() {
-	[[ ${1-${EAPI-0}} =~ ^(0|1|2|3|4|4-python|4-slot-abi)$ ]]
+	return 1
 }
 
 ___eapi_has_S_WORKDIR_fallback() {
-	[[ ${1-${EAPI-0}} =~ ^(0|1|2|3)$ ]]
+	return 1
 }
 
 # VARIABLES
 
 ___eapi_has_prefix_variables() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2)$ || " ${FEATURES} " == *" force-prefix "* ]]
+	return 0
 }
 
 ___eapi_has_BROOT() {
@@ -43,7 +43,7 @@ ___eapi_has_BDEPEND() {
 }
 
 ___eapi_has_RDEPEND_DEPEND_fallback() {
-	[[ ${1-${EAPI-0}} =~ ^(0|1|2|3)$ ]]
+	return 1
 }
 
 ___eapi_has_PORTDIR_ECLASSDIR() {
@@ -53,11 +53,11 @@ ___eapi_has_PORTDIR_ECLASSDIR() {
 # HELPERS PRESENCE
 
 ___eapi_has_dohard() {
-	[[ ${1-${EAPI-0}} =~ ^(0|1|2|3)$ ]]
+	return 1
 }
 
 ___eapi_has_dosed() {
-	[[ ${1-${EAPI-0}} =~ ^(0|1|2|3)$ ]]
+	return 1
 }
 
 ___eapi_has_einstall() {
@@ -77,7 +77,7 @@ ___eapi_has_dolib_libopts() {
 }
 
 ___eapi_has_docompress() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3)$ ]]
+	return 0
 }
 
 ___eapi_has_dostrip() {
@@ -85,15 +85,15 @@ ___eapi_has_dostrip() {
 }
 
 ___eapi_has_nonfatal() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3)$ ]]
+	return 0
 }
 
 ___eapi_has_doheader() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3|4|4-python|4-slot-abi)$ ]]
+	return 0
 }
 
 ___eapi_has_usex() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3|4|4-python|4-slot-abi)$ ]]
+	return 0
 }
 
 ___eapi_has_get_libdir() {
@@ -121,31 +121,31 @@ ___eapi_has_version_functions() {
 }
 
 ___eapi_has_master_repositories() {
-	[[ ${1-${EAPI-0}} =~ ^(5-progress)$ ]]
+	return 1
 }
 
 ___eapi_has_repository_path() {
-	[[ ${1-${EAPI-0}} =~ ^(5-progress)$ ]]
+	return 1
 }
 
 ___eapi_has_available_eclasses() {
-	[[ ${1-${EAPI-0}} =~ ^(5-progress)$ ]]
+	return 1
 }
 
 ___eapi_has_eclass_path() {
-	[[ ${1-${EAPI-0}} =~ ^(5-progress)$ ]]
+	return 1
 }
 
 ___eapi_has_license_path() {
-	[[ ${1-${EAPI-0}} =~ ^(5-progress)$ ]]
+	return 1
 }
 
 ___eapi_has_package_manager_build_user() {
-	[[ ${1-${EAPI-0}} =~ ^(5-progress)$ ]]
+	return 1
 }
 
 ___eapi_has_package_manager_build_group() {
-	[[ ${1-${EAPI-0}} =~ ^(5-progress)$ ]]
+	return 1
 }
 
 # HELPERS BEHAVIOR
@@ -159,7 +159,7 @@ ___eapi_best_version_and_has_version_support_-b_-d_-r() {
 }
 
 ___eapi_unpack_supports_xz() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2)$ ]]
+	return 0
 }
 
 ___eapi_unpack_supports_txz() {
@@ -167,11 +167,11 @@ ___eapi_unpack_supports_txz() {
 }
 
 ___eapi_econf_passes_--disable-dependency-tracking() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3)$ ]]
+	return 0
 }
 
 ___eapi_econf_passes_--disable-silent-rules() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3|4|4-python|4-slot-abi)$ ]]
+	return 0
 }
 
 ___eapi_econf_passes_--docdir_and_--htmldir() {
@@ -183,23 +183,23 @@ ___eapi_econf_passes_--with-sysroot() {
 }
 
 ___eapi_use_enable_and_use_with_support_empty_third_argument() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3)$ ]]
+	return 0
 }
 
 ___eapi_dodoc_supports_-r() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3)$ ]]
+	return 0
 }
 
 ___eapi_doins_and_newins_preserve_symlinks() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3)$ ]]
+	return 0
 }
 
 ___eapi_newins_supports_reading_from_standard_input() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3|4|4-python|4-slot-abi)$ ]]
+	return 0
 }
 
 ___eapi_helpers_can_die() {
-	[[ ! ${1-${EAPI-0}} =~ ^(0|1|2|3)$ ]]
+	return 0
 }
 
 ___eapi_unpack_is_case_sensitive() {
